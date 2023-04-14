@@ -397,7 +397,7 @@ then register extension
 ![image info](./inheritance.png)  
 
 ---
-### Migration
+### Migration  
 after you created definitions, entity and collection, you have to create migration.
 create migration with
 `./bin/console database:create-migration --name Bundle -p BundleExample` - it will create migration file `custom/plugins/BundleExample/src/Migration/Migration1680773769Bundle.php`
