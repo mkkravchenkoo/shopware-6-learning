@@ -257,7 +257,7 @@ class BundleDefinition extends EntityDefinition{
 ```
 
 ### Example: Entity
-`/src/Core/Content/Bundle/BundleEntity.pjp`
+`/src/Core/Content/Bundle/BundleEntity.php`
 ```php
 class BundleEntity extends Entity{
 
@@ -337,7 +337,7 @@ ManyToManyAssocociiationField('aclRoles', AclRoleDefinition::class, AclUserRoleD
 
 ```
 ### Associations example
-`./src?core/Content/Bundle/BundleDefinition.php`
+`src/core/Content/Bundle/BundleDefinition.php`
 ```php
 
 class BundleDefinition extends EntityDefinition{
@@ -350,7 +350,7 @@ class BundleDefinition extends EntityDefinition{
 
 }
 ```
-`./src/Core/Content/Bundle/Aggregation/BundleProduct/BundleProductDeinition.php`
+`/src/Core/Content/Bundle/Aggregation/BundleProduct/BundleProductDeinition.php`
 ```php
 class BundleProductDefinition extends MappingEntityDefinition{
    return new FieldCollection([
