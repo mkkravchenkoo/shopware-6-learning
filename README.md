@@ -404,7 +404,7 @@ create migration with
 `./bin/console database:create-migration --name Bundle -p BundleExample` - it will create migration file `custom/plugins/BundleExample/src/Migration/Migration1680773769Bundle.php`
 then you have to create schema
 `./bin/console dal:create:schema`  -it will create file `schema/swag.sql`. It will contain sql queries. You can put them in migration file (Migration1680773769Bundle.php)
----
+___
 ### Administration module
 
 `src/Resources/app/administration` - put here everything, what is related with administration  
