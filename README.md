@@ -294,7 +294,8 @@ class BundleCollection extends EntityCollection{
 </service>
 ```
 ___ 
-### EntityTranslation definition example
+### Entity Translation
+Definition example
 `/src/Core/Content/Bundle/Aggregate/BundleTranslation/BundleTranslationDefinition.php`
 ```php
 class BundleTranslationDefinition extends EntityTranslationDefinition{
