@@ -396,9 +396,11 @@ then register extension
 ### Inheritance
 ![image info](./inheritance.png)  
 
----
+___
+
 ### Migration  
-after you created definitions, entity and collection, you have to create migration.
+### Migration
+After you created definitions, entity and collection, you have to create migration.
 create migration with
 `./bin/console database:create-migration --name Bundle -p BundleExample` - it will create migration file `custom/plugins/BundleExample/src/Migration/Migration1680773769Bundle.php`
 then you have to create schema
