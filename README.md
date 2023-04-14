@@ -398,7 +398,6 @@ then register extension
 
 ___
 
-### Migration  
 ### Migration
 After you created definitions, entity and collection, you have to create migration.
 create migration with
