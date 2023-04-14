@@ -1,0 +1,4 @@
+{% sw_extends '@Storefront/storefront/utilities/offcanvas.html.twig' %}
+{% block utilities_offcanvas_content %}
+    {{ page.product.customFields.custom_training_text | raw }}
+{% endblock %}

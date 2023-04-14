@@ -1,0 +1,18 @@
+{
+  "name": "swag/plugin-skeleton",
+  "description": "Skeleton plugin advanced",
+  "type": "shopware-platform-plugin",
+  "license": "MIT",
+  "autoload": {
+    "psr-4": {
+      "BundleExample\\": "src/"
+    }
+  },
+  "extra": {
+    "shopware-plugin-class": "BundleExample\\BundleExample",
+    "label": {
+      "de-DE": "Skeleton plugin advanced",
+      "en-GB": "Skeleton plugin advanced"
+    }
+  }
+}
