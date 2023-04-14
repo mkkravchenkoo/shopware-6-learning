@@ -18,9 +18,9 @@ installation:
 - Vargrant Vm (windows, linux, mac)
 
 repos:
-shopware/platform - main mono repository
-shopware/development - symfony template (now is deprecated)
-shopware/production
+`shopware/platform` - main mono repository
+`shopware/development` - symfony template (now is deprecated)
+`shopware/production`
 
 psh - (php shell helper )task runner for php. For not-symfony stuff
 we can install SW by psh - ./psh.phar `docker:start`
@@ -74,15 +74,14 @@ We have to use translated property always. example - `{{product.translated.name}
 
 we can override sw scss variables - have to create config with specific name for example `sw-color-brand-primary`
 
-===================================
-===================================
+
+---  
+___  
+
 # Developer
 ## Some structure
-custom/plugins - plugins are here
-core - is required folder.
-core/content - all is changable from the merchant
-core/Framework/DataAbstractionLayer - replace symfony ORM doctrine. It is faster
-core/System - uses by shopware - tax, locale, custom fields
+`custom/plugins` - plugins are there
+`core/Framework/DataAbstractionLayer` - replace symfony ORM doctrine. It is faster
 
 ## Plugin
 Create plugin `./bin/console plugin:create SwagShopFinder`
@@ -90,7 +89,8 @@ files will be created in `custom/plugins/SwagShopFinder`
 
 file `custom/plugins/SwagShopFinder/composer.json`
 
-```{
+```json
+{
   "name": "swag/plugin-skeleton", // can be changed
   "description": "Skeleton plugin",
   "type": "shopware-platform-plugin", // Can't be changed. Other name will be ignored
@@ -109,39 +109,72 @@ file `custom/plugins/SwagShopFinder/composer.json`
   }
 }
 ```
+`src/SwagShopFinder.php`
+class `SwagShopFinder\SwagShopFinder` extends from `Shopware\Core\Framework\Plugin`. It contains livecycle events of plugin
+`src/Resources/config/services.xml` - add services here
+Shopware plugins are the symfony bundles.
+___
 
-class `SwagShopFinder\SwagShopFinder` extends from `Shopware\Core\Framework\Plugin`. It contains livecycle events:
-file `custom/plugins/SwagShopFinder/src/Resources/config/services.xml` - add services
-Shopware plugins is the symfony bundles.
-
-to enable plugin:
+To enable plugin:
 1. `plugin:refresh` - tells sw open plugins folder and reread
 2. `plugin:install` 
 3. `plugin:activate`
+___
 
 ## Entity
 Each entity consists of `EntityDefinition`, `Entity`, `Collection`,
-`ShopFinderDefinition.php` - fields. entry point for sw
+`ShopFinderDefinition.php` - fields
 `ShopFinderEntity.php` - includes getters and setters. Uses in code to get/set fields values
 `ShopFinderCollection.php`
 Then we have to add service with id of definition
-
+```xml
+<service id="SwagShopFinder\Core\Content\ShopFinder\ShopFinderDefinition">
+    <tag name="shopware.entity.definition" entity="swag_shop_finder" />
+</service>
+```
 create migration: `./bin/console database:create-migration -p SwagShopFinder`
 File will be created `custom/plugins/SwagShopFinder/src/Migration/Migration1672319626.php`
 `update` - ran if plugin is installed or updated
 `updateDestructive` - make changes for existing plugins that are destructive 
+___
 
 ## Routing
-create controller from `AbstractController` Above class add `@RouteScope(scopes={"api"})` annotation
-Above controller method set annotation` @Route("api/v{version}/_action/swag-shop-finder/generate", name="api.custom_swag_shop_finder.generate", methods={"POST"})`
-create file `custom/plugins/SwagShopFinder/src/Resources/config/routes.xml` and add `<import resource="../../**/Api/*Controller.php" type="annotation" />` See https://developer.shopware.com/docs/guides/plugins/plugins/framework/store-api/add-store-api-route#register-route
-Add `arguments` for `service` in `services.xml`
+`src/Core/Api/DemoDataController.php`
+```php
+/**
+ * @RouteScope(scopes={"api"})
+ */
+class DemoDataController extends AbstractController
+{
+     /**
+     * @Route("api/v{version}/_action/swag-shop-finder/generate", name="api.custom_swag_shop_finder.generate", methods={"POST"})
+     */
+    public function generate(Context $context): Response
+    {
+        //...
+        return new Response('', Response::HTTP_NO_CONTENT);
+    }
+}
+
+```
+`src/Resources/config/routes.xml`
+```php
+<import resource="../../**/Api/*Controller.php" type="annotation" />
+```
+See https://developer.shopware.com/docs/guides/plugins/plugins/framework/store-api/add-store-api-route#register-route
 
 ## Plugin configuration
-create file `custom/plugins/SwagShopFinder/src/Resources/config/config.xml` see https://developer.shopware.com/docs/guides/plugins/plugins/plugin-fundamentals/add-plugin-configuration#fill-your-plugin-configuration-with-settings
+`src/Resources/config/config.xml` see https://developer.shopware.com/docs/guides/plugins/plugins/plugin-fundamentals/add-plugin-configuration#fill-your-plugin-configuration-with-settings
 
-To display custom entity on frontend - need listen event and put content into this event
-to do this - create service in `services.xml` and set `<tag name="kernel.event_subscriber"/>`
+## Subscriber
+`services.xml`
+```xml
+<service id="SwagShopFinder\Storefront\Subscriber\FooterSubscriber">
+    <argument type="service" id="Shopware\Core\System\SystemConfig\SystemConfigService"/>
+    <argument type="service" id="swag_shop_finder.repository" />
+    <tag name="kernel.event_subscriber"/>
+</service>
+```
 Event class
 ```php
 class FooterSubscriber implements EventSubscriberInterface {
@@ -158,14 +191,11 @@ class FooterSubscriber implements EventSubscriberInterface {
 
 To get config value `$this->systemConfigService->get('SwagShopFinder.config.showInStorefront')`
 
-Create api key = Settings -> Integrations
-then use to generate `access_token` in this way
+___
+## Create api key
+Settings -> Integrations
+then use to generate `access_token`
 ```
-POST /api/oauth/token HTTP/1.1
-Host: shopware6.lndo.site
-Content-Type: application/json
-Content-Length: 165
-
 {
     "client_id":"SWIAMLFXQWJGSKJ5ANGZUM1JNQ",
     "client_secret": "dWZxUkdvTXBGTUh4MXJIcVpuQmFUaUR3OHR5MzkzY3VCTm05RUg",
@@ -173,15 +203,14 @@ Content-Length: 165
 }
 ```
 
-
-To add translation:
+## To add translation:
 1. create class `/Resources/snippet/en_GB/SnippetFile_en_GB.php` implements `SnippetFileInterface` and add methods.
 2. add service
-```xml
-    <service id="SwagShopFinder\Resources\snippet\en_GB\SnippetFile_en_GB">
-        <tag name="shopware.snippet.file"/>
-    </service>
-```
+    ```xml
+        <service id="SwagShopFinder\Resources\snippet\en_GB\SnippetFile_en_GB">
+            <tag name="shopware.snippet.file"/>
+        </service>
+    ```
 3. create file `Resources/snippet/en_GB/storefront.en-GB.json` in the same folder as `SnippetFile_en_GB.php` and add translations
 4. display string in template `{{ 'swag_shop_finder.phone'|trans }}`
 
