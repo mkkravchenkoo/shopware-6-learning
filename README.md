@@ -122,7 +122,7 @@ To enable plugin:
 ___
 
 ## Entity
-Each entity consists of `EntityDefinition`, `Entity`, `Collection`,
+Each entity consists of `EntityDefinition`, `Entity`, `Collection`.  
 `ShopFinderDefinition.php` - fields  
 `ShopFinderEntity.php` - includes getters and setters. Uses in code to get/set fields values  
 `ShopFinderCollection.php`  
@@ -164,7 +164,19 @@ class DemoDataController extends AbstractController
 See https://developer.shopware.com/docs/guides/plugins/plugins/framework/store-api/add-store-api-route#register-route
 
 ## Plugin configuration
-`src/Resources/config/config.xml` see https://developer.shopware.com/docs/guides/plugins/plugins/plugin-fundamentals/add-plugin-configuration#fill-your-plugin-configuration-with-settings
+`src/Resources/config/config.xml`  
+```xml
+<card>
+    <title>Basic configuration </title>
+    <title lang="de-DE">Basic configuration DE </title>
+    <input-field type="bool">
+        <name>showInStorefront</name>
+        <label>Show in storefront</label>
+        <label lang="de-DE">Show in storefront DE</label>
+    </input-field>
+</card>
+```
+see https://developer.shopware.com/docs/guides/plugins/plugins/plugin-fundamentals/add-plugin-configuration#fill-your-plugin-configuration-with-settings
 
 ## Subscriber
 `services.xml`
@@ -205,9 +217,9 @@ then use to generate `access_token`
 1. create class `/Resources/snippet/en_GB/SnippetFile_en_GB.php` implements `SnippetFileInterface` and add methods.
 2. add service
     ```xml
-        <service id="SwagShopFinder\Resources\snippet\en_GB\SnippetFile_en_GB">
-            <tag name="shopware.snippet.file"/>
-        </service>
+    <service id="SwagShopFinder\Resources\snippet\en_GB\SnippetFile_en_GB">
+        <tag name="shopware.snippet.file"/>
+    </service>
     ```
 3. create file `Resources/snippet/en_GB/storefront.en-GB.json` in the same folder as `SnippetFile_en_GB.php` and add translations
 4. display string in template `{{ 'swag_shop_finder.phone'|trans }}`
@@ -217,9 +229,9 @@ ___
 
 ## Developer Training Advanced
 ### Entity consists 3 classes:
-#### Entity: object-oriented mapping of data structure
-#### Entity Definition: Maps the entity to database structure
-#### Entity Collection - Collection of entities
+**Entity**: object-oriented mapping of data structure  
+**Entity Definition**: Maps the entity to database structure  
+**Entity Collection**: - Collection of entities  
 
 
 ### Example: Entity Definition
