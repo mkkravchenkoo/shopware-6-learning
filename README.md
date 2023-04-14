@@ -80,12 +80,12 @@ ___
 
 # Developer
 ## Some structure
-`custom/plugins` - plugins are there
-`core/Framework/DataAbstractionLayer` - replace symfony ORM doctrine. It is faster
+`custom/plugins` - plugins are there  
+`core/Framework/DataAbstractionLayer` - replace symfony ORM doctrine. It is faster  
 
 ## Plugin
-Create plugin `./bin/console plugin:create SwagShopFinder`
-files will be created in `custom/plugins/SwagShopFinder`
+Create plugin `./bin/console plugin:create SwagShopFinder`  
+files will be created in `custom/plugins/SwagShopFinder`  
 
 file `custom/plugins/SwagShopFinder/composer.json`
 
@@ -109,10 +109,10 @@ file `custom/plugins/SwagShopFinder/composer.json`
   }
 }
 ```
-`src/SwagShopFinder.php`
-class `SwagShopFinder\SwagShopFinder` extends from `Shopware\Core\Framework\Plugin`. It contains livecycle events of plugin
-`src/Resources/config/services.xml` - add services here
-Shopware plugins are the symfony bundles.
+`src/SwagShopFinder.php`  
+class `SwagShopFinder\SwagShopFinder` extends from `Shopware\Core\Framework\Plugin`. It contains livecycle events of plugin  
+`src/Resources/config/services.xml` - add services here  
+Shopware plugins are the symfony bundles.  
 ___
 
 To enable plugin:
@@ -123,9 +123,9 @@ ___
 
 ## Entity
 Each entity consists of `EntityDefinition`, `Entity`, `Collection`,
-`ShopFinderDefinition.php` - fields
-`ShopFinderEntity.php` - includes getters and setters. Uses in code to get/set fields values
-`ShopFinderCollection.php`
+`ShopFinderDefinition.php` - fields  
+`ShopFinderEntity.php` - includes getters and setters. Uses in code to get/set fields values  
+`ShopFinderCollection.php`  
 Then we have to add service with id of definition
 ```xml
 <service id="SwagShopFinder\Core\Content\ShopFinder\ShopFinderDefinition">
@@ -134,7 +134,7 @@ Then we have to add service with id of definition
 ```
 create migration: `./bin/console database:create-migration -p SwagShopFinder`
 File will be created `custom/plugins/SwagShopFinder/src/Migration/Migration1672319626.php`
-`update` - ran if plugin is installed or updated
+`update` - ran if plugin is installed or updated  
 `updateDestructive` - make changes for existing plugins that are destructive 
 ___
 
@@ -170,8 +170,6 @@ See https://developer.shopware.com/docs/guides/plugins/plugins/framework/store-a
 `services.xml`
 ```xml
 <service id="SwagShopFinder\Storefront\Subscriber\FooterSubscriber">
-    <argument type="service" id="Shopware\Core\System\SystemConfig\SystemConfigService"/>
-    <argument type="service" id="swag_shop_finder.repository" />
     <tag name="kernel.event_subscriber"/>
 </service>
 ```
