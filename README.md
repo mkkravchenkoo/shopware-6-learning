@@ -664,8 +664,8 @@ ___
 
 ### Shopping cart collector
 Collect method of card processor - if you want to change something in cart. There are 2 methods:
-- collect() - add something to the card
-- process() - calculate items
+- **collect()** - add something to the card
+- **process()** - calculate items  
 These methods could be called multiple times
 `src/Resources/config/services.xml`
 ```xml
