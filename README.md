@@ -373,13 +373,13 @@ public function getDefinitionClass(){
 }
 public function extendFields($collection){
     $collection->add(
-        new ManyToManyAssociationField(
+            (new ManyToManyAssociationField(
             'bundles',
             BundleDefinition::class,
             BundleProductDefinition::class,
-            'productId',
+            'product_id',
             'bundle_id'
-        )
+            ))->addFlags(new Inherited())
     )
 
 }
@@ -414,7 +414,7 @@ ___
 const { Module } = Shopware; // get shopware factory module
 Module.register('swag-bundle', {
     type: 'plugin',
-    name: 'Bundle', // because we named swag bundle
+    name: 'bundle', // because we named swag bundle
     title: 'swag-bundle.general.mainMenuItemGeneral', // get from snipet
     description: 'sw-property.general.descriptionTextModule', // get from snipet
     color: '#FFD700', // color for icon
@@ -457,16 +457,25 @@ Module.register('swag-bundle', {
 
 ```
 ___
-`src/Resources/app/administration/src/main.js` - Entry point. Import here created module
+`src/Resources/app/administration/src/main.js` - Entry point. Import here everything
 ```js
 `import './module/swag-bundle'`
 ```
 
 `src/Resources/app/administration/src/module/swag-bundle/snippet/de-DE.json` and `en-GB.json` - translations
 
-after js changes run `./bin/build-administration.sh` - it builds js files
+after js-admin changes run `./bin/build-administration.sh` - it builds js files  
+`./bin//watch-administration.sh` - watch admin js on port 8080
 ___
 bottlejs is DI for JS
+___  
+vuejs template -  
+**slots** - use existed component and reconfigure for my needs  
+**block** - override
+
+`Component.override` - override existed component  
+`Component.register` - create new component  
+`Component.extend` - extend from existed component and create new one  
 ___
 Administration pages are located in `src/Resources/app/administration/src/module/swag-bundle/page/` folder
 one page could have 2 files:
