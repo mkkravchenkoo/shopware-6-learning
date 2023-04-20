@@ -762,7 +762,7 @@ Application.addServiceProviderDecorator('ruleConditionDataProviderService', (rul
 ```
 Add component to `src/Resources/app/administration/src/core/component/swag-cart-contains-bundle`
 import `rule-condition-service-decoration`  to `main.js`
-
+___  
 ### Custom CLI commands  
 `src/Resources/config/services.xml`
 ```xml
@@ -786,6 +786,7 @@ class ExampleCommand extends Command
     }
 }
 ```
+___  
 ### Add scheduled task  
 `src/Resources/config/services.xml`
 ```xml
@@ -824,7 +825,7 @@ class ExampleTaskHandler extends ScheduledTaskHandler
     }
 }
 ```
-
+___
 ### Adding NPM dependencies   
 1. create package.json  
     `src/Resources/app/administration/` or `src/Resources/app/storefront/`  
