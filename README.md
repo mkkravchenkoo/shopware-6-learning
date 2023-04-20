@@ -1,4 +1,5 @@
 # Shopware 6 - Template Training Advanced (EN)
+docs [https://developer.shopware.com/docs/](https://developer.shopware.com/docs/)  
 
 ## 2 Creating a theme
 create the theme `./bin/console theme:create`
@@ -120,7 +121,21 @@ To enable plugin:
 2. `plugin:install` 
 3. `plugin:activate`
 ___
+Required files for plugin are:  
+`src/Resources/config/services.xml`  
+`src/SwagBasicExample.php`  
+`composer.json`  
+___  
 
+### Plugin lifecycle  
+* install() Executed on plugin install (use this method to install all the necessary requirements for your plugin, e.g. a new payment method.)  
+* postInstall() Executed after successful plugin install  
+* update() Executed on plugin update  (Update necessary stuff, mostly non-database related. db changes are made with migrations)  
+* postUpdate() Executed after successful plugin update  
+* uninstall() Executed on plugin uninstallation (You might want to remove the data, that your plugin created)  
+* activate() Executed before plugin activation (Activate entities that you created in the install method, e.g. such as a payment method. Create new entities or data, that you couldn't create in the install method)  
+* deactivate()  Executed before plugin deactivation (Deactivate entities created by the install method. remove entities, that cannot be deactivated but would harm the system)  
+___
 ## Entity
 Each entity consists of `EntityDefinition`, `Entity`, `Collection`.  
 `ShopFinderDefinition.php` - fields  
@@ -167,10 +182,10 @@ See https://developer.shopware.com/docs/guides/plugins/plugins/framework/store-a
 `src/Resources/config/config.xml`  
 ```xml
 <card>
-    <title>Basic configuration </title>
+    <title>Basic configuration </title> <!--required-->
     <title lang="de-DE">Basic configuration DE </title>
-    <input-field type="bool">
-        <name>showInStorefront</name>
+    <input-field type="bool"> <!--required-->
+        <name>showInStorefront</name> <!--required-->
         <label>Show in storefront</label>
         <label lang="de-DE">Show in storefront DE</label>
     </input-field>
@@ -404,6 +419,7 @@ create migration with
 `./bin/console database:create-migration --name Bundle -p BundleExample` - it will create migration file `custom/plugins/BundleExample/src/Migration/Migration1680773769Bundle.php`
 then you have to create schema
 `./bin/console dal:create:schema`  -it will create file `schema/swag.sql`. It will contain sql queries. You can put them in migration file (Migration1680773769Bundle.php)
+`/bin/console database:migrate SwagBasicExample --all` - run manually. Or it can be run automatically while update/install plugin.  
 ___
 ### Administration module
 
@@ -746,3 +762,92 @@ Application.addServiceProviderDecorator('ruleConditionDataProviderService', (rul
 ```
 Add component to `src/Resources/app/administration/src/core/component/swag-cart-contains-bundle`
 import `rule-condition-service-decoration`  to `main.js`
+
+### Custom CLI commands  
+`src/Resources/config/services.xml`
+```xml
+<service id="Swag\BasicExample\Command\ExampleCommand">
+   <tag name="console.command"/>
+</service>
+```
+
+`/src/Command/ExampleCommand.php`  
+```php
+class ExampleCommand extends Command
+{
+    protected static $defaultName = 'swag-commands:example';
+    protected function configure(){
+        $this->setDescription('Does something very special.');
+    }
+    protected function execute(InputInterface $input, OutputInterface $output): int
+    {
+        $output->writeln('It works!');
+        return 0;
+    }
+}
+```
+### Add scheduled task  
+`src/Resources/config/services.xml`
+```xml
+ <service id="Swag\BasicExample\Service\ScheduledTask\ExampleTask">
+    <tag name="shopware.scheduled.task" />
+</service>
+<service id="Swag\BasicExample\Service\ScheduledTask\ExampleTaskHandler">
+    <argument type="service" id="scheduled_task.repository" />
+    <tag name="messenger.message_handler" />
+</service>
+```
+`src/Service/ScheduledTask/ExampleTask.php`
+```php
+
+class ExampleTask extends ScheduledTask
+{
+    public static function getTaskName(){
+        return 'swag.example_task';
+    }
+
+    public static function getDefaultInterval(){
+        return 300; // 5 minutes
+    }
+}
+```
+`src/Service/ScheduledTask/ExampleTaskHandler.php`
+```php
+class ExampleTaskHandler extends ScheduledTaskHandler
+{
+    public static function getHandledMessages(){
+        return [ ExampleTask::class ];
+    }
+
+    public function run(){
+        // do something
+    }
+}
+```
+
+### Adding NPM dependencies   
+1. create package.json  
+    `src/Resources/app/administration/` or `src/Resources/app/storefront/`  
+2. register package  
+      `src/Resources/app/storefront/build/webpack.config.js`
+       ```js
+       const { join, resolve } = require('path'); 
+       module.exports = () => { 
+           return { 
+               resolve: { 
+                  alias: { 
+                      '@missionlog': resolve( 
+                           join(__dirname, '..', 'node_modules', 'missionlog') 
+                      ) 
+                  } 
+              } 
+          }; 
+       }
+       ```
+3. use `src/Resources/app/storefront/src/main.js`
+    ```js
+    import { log } from '@missionlog';
+    log.init({ initializer: 'INFO' }, (level, tag, msg, params) => {
+        console.log(`${level}: [${tag}] `, msg, ...params);
+     });
+    ```
